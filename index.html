@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Earning with App</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  font-family: Arial, sans-serif;
+  color: #ffffff;
+  background: linear-gradient(145deg, #101827, #172c42, #075e54);
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 24px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 24px;
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  text-align: center;
+}
+
+.logo {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 22px;
+  background: #20c997;
+  color: #082b28;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 29px;
+}
+
+.subtitle {
+  color: #c7d6e4;
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 9px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #53677a;
+  border-radius: 12px;
+  background: #101d2b;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #20c997;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 12px;
+  background: #20c997;
+  color: #082b28;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+#result {
+  display: none;
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(32,201,151,.12);
+  border: 1px solid rgba(32,201,151,.4);
+}
+
+#message {
+  color: #b9f5df;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#copyButton {
+  margin-top: 12px;
+}
+
+#downloadButton {
+  display: block;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #101827;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.note {
+  margin-top: 22px;
+  color: #aebdcb;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+footer {
+  margin-top: 24px;
+  color: #aebdcb;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+<main class="card">
+  <div class="logo">E</div>
+
+  <h1>Earning with App</h1>
+
+  <p class="subtitle">
+    Enter your email address to continue
+    and get the app download link.
+  </p>
+
+  <form id="emailForm">
+    <label for="email">Enter Email Address</label>
+
+    <input
+      id="email"
+      name="email"
+      type="email"
+      placeholder="you@example.com"
+      autocomplete="email"
+      required
+    >
+
+    <button id="submitButton" type="submit">
+      Send Email
+    </button>
+  </form>
+
+  <section id="result" aria-live="polite">
+    <h3>Thank You!</h3>
+    <p id="message"></p>
+
+    <button id="copyButton" type="button">
+      Copy This App Link
+    </button>
+
+    <a
+      id="downloadButton"
+      href="#"
+      target="_blank"
+      rel="noopener"
+    >
+      Download App
+    </a>
+  </section>
+
+  <p class="note">
+    Please enter a valid email address.
+  </p>
+
+  <footer>
+    © <span id="year"></span> Earning with App
+  </footer>
+</main>
+
+<script>
+/*
+ * IMPORTANT:
+ * Replace this placeholder with your actual APK download URL.
+ */
+const APP_DOWNLOAD_LINK = "PASTE_YOUR_APK_DOWNLOAD_LINK_HERE";
+
+const form = document.getElementById("emailForm");
+const emailInput = document.getElementById("email");
+const result = document.getElementById("result");
+const message = document.getElementById("message");
+const copyButton = document.getElementById("copyButton");
+const downloadButton = document.getElementById("downloadButton");
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const email = emailInput.value.trim();
+
+  if (!emailInput.checkValidity() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailInput.reportValidity();
+    return;
+  }
+
+  result.style.display = "block";
+
+  message.textContent =
+    "Your email format is valid. The app link is shown below.";
+
+  if (APP_DOWNLOAD_LINK.startsWith("https://") ||
+      APP_DOWNLOAD_LINK.startsWith("http://")) {
+    downloadButton.href = APP_DOWNLOAD_LINK;
+    downloadButton.style.display = "block";
+    copyButton.style.display = "block";
+  } else {
+    downloadButton.style.display = "none";
+    copyButton.style.display = "none";
+    message.textContent =
+      "The email format is valid. The app download link still needs to be configured.";
+  }
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+});
+
+copyButton.addEventListener("click", async function() {
+  if (!APP_DOWNLOAD_LINK.startsWith("https://") &&
+      !APP_DOWNLOAD_LINK.startsWith("http://")) {
+    alert("The app download link has not been configured yet.");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(APP_DOWNLOAD_LINK);
+    copyButton.textContent = "Link Copied!";
+  } catch (error) {
+    const temporaryInput = document.createElement("textarea");
+    temporaryInput.value = APP_DOWNLOAD_LINK;
+    document.body.appendChild(temporaryInput);
+    temporaryInput.select();
+
+    const copied = document.execCommand("copy");
+    temporaryInput.remove();
+
+    copyButton.textContent = copied
+      ? "Link Copied!"
+      : "Please copy the link manually";
+  }
+});
+</script>
+</body>
+</html>
